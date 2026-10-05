@@ -1,6 +1,3 @@
-import { PlaceholderScreen } from '@/components/placeholder-screen';
-import { en } from '@/i18n/en';
+import { InsightsScreen } from '@/features/insights/insights-screen';
 
-export default function InsightsScreen() {
-  return <PlaceholderScreen title={en.tabs.insights} />;
-}
+export default InsightsScreen;

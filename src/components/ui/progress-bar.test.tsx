@@ -32,6 +32,11 @@ describe('ProgressBar', () => {
     expect(fillStyle().backgroundColor).toBe(palette.light.warning);
   });
 
+  it('does not warn on chart-colored bars even when full', async () => {
+    await renderWithTheme(<ProgressBar value={1} categoryId="chart" />);
+    expect(fillStyle().backgroundColor).toBe(palette.light.chart);
+  });
+
   it('exposes progress to assistive tech', async () => {
     await renderWithTheme(
       <ProgressBar

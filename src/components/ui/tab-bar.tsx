@@ -11,7 +11,7 @@ import { useTheme } from '@/theme/theme-provider';
 
 /** Route name to label and icon. Order of the tabs comes from the navigator. */
 const TABS: Record<string, { label: string; icon: IconName }> = {
-  index: { label: en.tabs.home, icon: 'house' },
+  home: { label: en.tabs.home, icon: 'house' },
   activity: { label: en.tabs.activity, icon: 'list' },
   insights: { label: en.tabs.insights, icon: 'pie-chart' },
   budgets: { label: en.tabs.budgets, icon: 'wallet' },

@@ -1,15 +1,18 @@
 import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from 'react-native';
 
+import { extraTypography } from '@/theme/canvas-extras';
 import { typography, type Palette } from '@/theme/salli-theme';
 import { useTheme } from '@/theme/theme-provider';
 
 export const MAX_FONT_SIZE_MULTIPLIER = 1.3;
 
-export type TextVariant = keyof typeof typography;
+const scale = { ...typography, ...extraTypography };
+
+export type TextVariant = keyof typeof scale;
 
 // The theme declares fontVariant as a readonly tuple, which React Native's TextStyle rejects.
 const textStyles = Object.fromEntries(
-  Object.entries(typography).map(([name, style]) => [
+  Object.entries(scale).map(([name, style]) => [
     name,
     'fontVariant' in style ? { ...style, fontVariant: [...style.fontVariant] } : style,
   ]),

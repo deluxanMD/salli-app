@@ -8,7 +8,7 @@ jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
 
-const NAMES = ['index', 'activity', 'insights', 'budgets', 'settings'];
+const NAMES = ['home', 'activity', 'insights', 'budgets', 'settings'];
 
 function props(activeIndex: number) {
   const navigation = {

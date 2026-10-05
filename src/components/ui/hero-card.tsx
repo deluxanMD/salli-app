@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { en } from '@/i18n/en';
 import { withAlpha } from '@/theme/color';
-import { fontFamily, formatRs, layout, radius, spacing } from '@/theme/salli-theme';
+import { formatRs, layout, radius, spacing } from '@/theme/salli-theme';
 import { useTheme } from '@/theme/theme-provider';
 
 type HeroCardProps = {
@@ -51,7 +51,7 @@ export function HeroCard({
             color={ink}
             strokeWidth={2.5}
           />
-          <Text variant="caption" style={[styles.pillText, { color: ink }]}>
+          <Text variant="captionBold" style={{ color: ink }}>
             {delta}
           </Text>
         </View>
@@ -68,7 +68,7 @@ export function HeroCard({
         data={trend}
         stroke={ink}
         area={withAlpha(ink, BLOCK)}
-        accessibilityLabel={en.a11y.cumulativeSpending}
+        accessibilityLabel={en.charts.cumulativeSpending}
       />
       <View style={[styles.stats, { backgroundColor: withAlpha(ink, BLOCK) }]}>
         <View style={styles.stat}>
@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: radius.pill,
   },
-  pillText: { fontFamily: fontFamily.bold },
   amount: { marginTop: 6, marginBottom: 10, fontVariant: ['tabular-nums'] },
   stats: {
     flexDirection: 'row',

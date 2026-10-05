@@ -5,14 +5,7 @@ import { CategoryTile } from '@/components/ui/category-tile';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Text } from '@/components/ui/text';
 import { en } from '@/i18n/en';
-import {
-  categories,
-  fontFamily,
-  formatRs,
-  spacing,
-  typography,
-  type CategoryId,
-} from '@/theme/salli-theme';
+import { categories, formatRs, spacing, type CategoryId } from '@/theme/salli-theme';
 import { useTheme } from '@/theme/theme-provider';
 
 type TransactionRowProps = {
@@ -24,6 +17,8 @@ type TransactionRowProps = {
   time: string;
   /** Row was created from an SMS. */
   auto?: boolean;
+  /** Two decimals in Activity, whole rupees on the dashboard. */
+  decimals?: 0 | 2;
   /** Draws the divider under the row; leave false for the last row in a card. */
   divider?: boolean;
   onPress?: () => void;
@@ -37,13 +32,14 @@ export function TransactionRow({
   amount,
   time,
   auto = false,
+  decimals = 2,
   divider = true,
   onPress,
 }: TransactionRowProps) {
   const { colors } = useTheme();
   const needsReview = categoryId === null;
   const isIncome = amount > 0;
-  const amountText = formatRs(amount, { decimals: 2, signed: true });
+  const amountText = formatRs(amount, { decimals, signed: true });
   const subtitle = needsReview ? en.transaction.needsCategory : categories[categoryId].shortLabel;
 
   return (
@@ -69,7 +65,7 @@ export function TransactionRow({
         <Text variant="amount" color={isIncome ? 'successText' : 'text'}>
           {amountText}
         </Text>
-        <Text style={styles.time} color="textMuted">
+        <Text variant="time" color="textMuted">
           {time}
         </Text>
       </View>
@@ -88,6 +84,4 @@ const styles = StyleSheet.create({
   copy: { flex: 1, gap: 2 },
   subtitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
   trailing: { alignItems: 'flex-end', gap: 2 },
-  // Spec: time 11 in textMuted. Micro is 11/700; the time uses the medium file.
-  time: { ...typography.micro, fontFamily: fontFamily.medium },
 });

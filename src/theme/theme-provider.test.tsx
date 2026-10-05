@@ -1,7 +1,7 @@
 import { act, render, renderHook } from '@testing-library/react-native';
-import * as ReactNative from 'react-native';
 import { Text } from 'react-native';
 
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { palette } from '@/theme/salli-theme';
 import { ThemeProvider, useTheme, useThemePreference } from '@/theme/theme-provider';
 
@@ -11,7 +11,11 @@ function wrapper(initialPreference: 'light' | 'dark' | 'system') {
   };
 }
 
+jest.mock('@/hooks/use-color-scheme');
+const mockUseColorScheme = jest.mocked(useColorScheme);
+
 describe('ThemeProvider', () => {
+  beforeEach(() => mockUseColorScheme.mockReturnValue('light'));
   afterEach(() => jest.restoreAllMocks());
 
   it('serves the light tokens in light mode', async () => {
@@ -27,13 +31,13 @@ describe('ThemeProvider', () => {
   });
 
   it('follows the system scheme in system mode', async () => {
-    jest.spyOn(ReactNative, 'useColorScheme').mockReturnValue('dark');
+    mockUseColorScheme.mockReturnValue('dark');
     const { result } = await renderHook(() => useTheme(), { wrapper: wrapper('system') });
     expect(result.current.mode).toBe('dark');
   });
 
   it('falls back to light when the system has no preference', async () => {
-    jest.spyOn(ReactNative, 'useColorScheme').mockReturnValue('unspecified');
+    mockUseColorScheme.mockReturnValue('unspecified');
     const { result } = await renderHook(() => useTheme(), { wrapper: wrapper('system') });
     expect(result.current.mode).toBe('light');
   });

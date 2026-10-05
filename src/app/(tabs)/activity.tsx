@@ -1,6 +1,3 @@
-import { PlaceholderScreen } from '@/components/placeholder-screen';
-import { en } from '@/i18n/en';
+import { ActivityScreen } from '@/features/activity/activity-screen';
 
-export default function ActivityScreen() {
-  return <PlaceholderScreen title={en.tabs.activity} />;
-}
+export default ActivityScreen;

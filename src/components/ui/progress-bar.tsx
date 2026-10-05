@@ -7,17 +7,31 @@ import { useTheme } from '@/theme/theme-provider';
 type ProgressBarProps = {
   /** Fraction used, 0 to 1 (values above 1 render as full). */
   value: number;
-  categoryId: CategoryId;
+  /** Category colors the fill; pass `chart` for the highlighted chart color. */
+  categoryId: CategoryId | 'chart';
   /** Optional row above the bar: name on the left, amounts on the right. */
   label?: string;
   valueLabel?: string;
+  /** Show the value in bold text color (Top merchants) instead of muted. */
+  emphasizeValue?: boolean;
 };
 
-export function ProgressBar({ value, categoryId, label, valueLabel }: ProgressBarProps) {
+export function ProgressBar({
+  value,
+  categoryId,
+  label,
+  valueLabel,
+  emphasizeValue = false,
+}: ProgressBarProps) {
   const { colors, categoryColor } = useTheme();
   const clamped = Math.min(Math.max(value, 0), 1);
-  const warn = value >= charts.progress.warnAt;
-  const fill = warn ? colors.warning : categoryColor(categoryId);
+  // The 90% warning applies to budgets; chart-colored bars (top merchants) never warn.
+  const warn = categoryId !== 'chart' && value >= charts.progress.warnAt;
+  const fill = warn
+    ? colors.warning
+    : categoryId === 'chart'
+      ? colors.chart
+      : categoryColor(categoryId);
 
   return (
     <View
@@ -29,12 +43,15 @@ export function ProgressBar({ value, categoryId, label, valueLabel }: ProgressBa
     >
       {label || valueLabel ? (
         <View style={styles.row}>
-          <Text variant="rowTitle" style={styles.label} numberOfLines={1}>
+          <Text variant="small" style={styles.label} numberOfLines={1}>
             {label}
           </Text>
           <Text
-            variant="small"
-            style={[styles.value, { color: warn ? colors.warning : colors.textMuted }]}
+            variant={emphasizeValue ? 'smallBold' : 'smallRegular'}
+            style={[
+              styles.value,
+              { color: warn ? colors.warning : emphasizeValue ? colors.text : colors.textMuted },
+            ]}
           >
             {valueLabel}
           </Text>

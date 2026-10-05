@@ -1,6 +1,3 @@
-import { PlaceholderScreen } from '@/components/placeholder-screen';
-import { en } from '@/i18n/en';
+import { BudgetsScreen } from '@/features/budgets/budgets-screen';
 
-export default function BudgetsScreen() {
-  return <PlaceholderScreen title={en.tabs.budgets} />;
-}
+export default BudgetsScreen;

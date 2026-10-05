@@ -33,7 +33,8 @@ src/
   components/     Shared UI components (ui/ for primitives and the spec's shared components, charts/)
   i18n/           en.ts: every user-facing string (English only for now)
   theme/          salli-theme.ts tokens, theme-provider.tsx (light/dark/system), color helpers
-  features/       Feature modules (components, hooks, api, types) once the app grows
+  features/       One folder per screen/feature (welcome, sms-access, dashboard, activity, transaction, insights, budgets, settings); routes in src/app re-export these
+  mock/           Design-mock data used until the data layer (SQLite) replaces it
   hooks/          Shared custom hooks
   utils/          Pure helper functions
   services/       API clients and external integrations
@@ -61,6 +62,7 @@ assets/           Images, fonts, icons
 ## Conventions
 
 - **Theming:** read tokens via `useTheme()` from `@/theme/theme-provider` (colors, `categoryColor`, `cardShadow`) and the static tokens (`typography`, `spacing`, `radius`, `sizes`, `charts`) from `@/theme/salli-theme`. Support light and dark mode. Use the `Text` primitive in `@/components/ui/text`. Never hard-code hex values or font sizes in components; never use `fontWeight` (pick the DM Sans file via `fontFamily`). Use `withAlpha` for translucent tints.
+- **Theme gaps:** sizes and radii that appear on the canvas but not in `salli-theme.ts` live in `src/theme/canvas-extras.ts` (proposal: fold into the theme file). Add to that file, never inline.
 - **Money:** format only with `formatRs` (minus sign is U+2212).
 - **Strings:** add every user-facing string to `src/i18n/en.ts`; no inline copy in components.
 - **Accessibility:** touch targets at least 44 × 44 (use `hitSlop` on 40-high controls), `accessibilityLabel` on icon-only buttons, text scales to 130% (`Text` caps it), contrast at least 4.5:1.
@@ -74,7 +76,7 @@ assets/           Images, fonts, icons
 
 - Jest with the `jest-expo` preset and React Native Testing Library (v14: `render` and `renderHook` are async, so `await` them). Config in `jest.config.js`.
 - Co-locate tests next to the code as `*.test.ts` / `*.test.tsx`; import via the `@/` alias.
-- Query by role, text, or label, not by implementation details. Mock only boundaries. Render themed components with `renderWithTheme` from `@/test/render-with-theme`. Reanimated and worklets are mocked in `src/test/setup.ts`.
+- Query by role, text, or label, not by implementation details. Mock only boundaries. Render themed components with `renderWithTheme` from `@/test/render-with-theme`. Reanimated, worklets, `expo-router` (`mockRouter`, `mockSearchParams` from `@/test/mock-router`) and safe-area are mocked globally in `src/test/setup.ts`.
 - Add or update tests for every behavior change. Run `npm test` before pushing.
 
 ## CI

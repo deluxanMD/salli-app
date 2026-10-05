@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Text } from '@/components/ui/text';
+import { extraRadius } from '@/theme/canvas-extras';
 import { radius, sizes, spacing } from '@/theme/salli-theme';
 import { useTheme } from '@/theme/theme-provider';
 
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   segment: {
     flex: 1,
     minHeight: sizes.segment,
-    borderRadius: 12,
+    borderRadius: extraRadius.control,
     alignItems: 'center',
     justifyContent: 'center',
   },

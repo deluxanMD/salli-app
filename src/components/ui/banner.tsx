@@ -3,7 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Text } from '@/components/ui/text';
-import { fontFamily, radius, sizes, spacing, typography } from '@/theme/salli-theme';
+import { extraRadius, extraSizes } from '@/theme/canvas-extras';
+import { radius, sizes, spacing } from '@/theme/salli-theme';
 import { useTheme } from '@/theme/theme-provider';
 
 type BannerProps = {
@@ -18,9 +19,6 @@ type BannerProps = {
   onPress?: () => void;
 };
 
-const BANNER_RADIUS = 18;
-const ACTION_RADIUS = 12;
-const ACTION_HEIGHT = 40;
 const TILE = 36;
 
 export function Banner({
@@ -45,10 +43,7 @@ export function Banner({
         </View>
       )}
       <View style={styles.copy}>
-        <Text
-          variant="small"
-          style={[styles.title, { color: isWarning ? colors.warning : colors.text }]}
-        >
+        <Text variant="label" style={{ color: isWarning ? colors.warning : colors.text }}>
           {title}
         </Text>
         <Text variant="caption" color="textMuted">
@@ -63,7 +58,7 @@ export function Banner({
           onPress={onActionPress ?? onPress}
           style={[styles.action, { backgroundColor: colors.warning }]}
         >
-          <Text variant="small" style={{ color: colors.warningSoft }}>
+          <Text variant="smallBold" style={{ color: colors.warningSoft }}>
             {actionLabel}
           </Text>
         </PressableScale>
@@ -99,7 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    borderRadius: BANNER_RADIUS,
+    borderRadius: extraRadius.banner,
     paddingVertical: spacing.md,
     paddingHorizontal: 14,
   },
@@ -111,12 +106,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   copy: { flex: 1, gap: 2 },
-  // Spec: 14/700. The type scale has no 14, so this is `small` in the bold file.
-  title: { fontFamily: fontFamily.bold, lineHeight: typography.rowTitle.lineHeight },
   action: {
-    minHeight: ACTION_HEIGHT,
+    minHeight: extraSizes.bannerAction,
     paddingHorizontal: 14,
-    borderRadius: ACTION_RADIUS,
+    borderRadius: extraRadius.control,
     alignItems: 'center',
     justifyContent: 'center',
   },
