@@ -14,6 +14,7 @@ Enabled experiments (`app.json`): `typedRoutes`, `reactCompiler`.
 npx expo start          # dev server
 npx expo lint           # lint (includes Prettier)
 npm run format          # format with Prettier
+npm test                # unit tests (Jest)
 npx tsc --noEmit        # typecheck
 npx expo-doctor         # diagnose dependency/config issues
 npx expo install <pkg>  # add dependencies (never npm/yarn add)
@@ -65,9 +66,16 @@ assets/           Images, fonts, icons
 - **Performance:** use `FlatList`/`FlashList` for long lists, `expo-image` for images, Reanimated for animation (keep work on the UI thread).
 - **Layout:** respect safe areas (`react-native-safe-area-context`) and test on small screens.
 
+## Testing
+
+- Jest with the `jest-expo` preset and React Native Testing Library (v14: `render` and `renderHook` are async, so `await` them). Config in `jest.config.js`.
+- Co-locate tests next to the code as `*.test.ts` / `*.test.tsx`; import via the `@/` alias.
+- Query by role, text, or label, not by implementation details. Mock only boundaries (e.g. `@/hooks/use-color-scheme`).
+- Add or update tests for every behavior change. Run `npm test` before pushing.
+
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests and pushes to `main`: lint, Prettier check, typecheck, `expo-doctor`, and a web export build. All must pass before merging. Run the same checks locally before pushing.
+GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests and pushes to `main`: lint, Prettier check, typecheck, unit tests with coverage, `expo-doctor`, and a web export build. All must pass before merging. Run the same checks locally before pushing.
 
 ## Dependencies
 
@@ -88,5 +96,6 @@ Expo changes between SDK releases — don't rely on memory. Check the `expo` maj
 
 1. `npx tsc --noEmit` passes.
 2. `npx expo lint` passes and `npm run format:check` is clean.
-3. Works in light and dark mode, and on both native and web where relevant.
-4. No hand-edited native directories; dependencies added via `expo install`.
+3. `npm test` passes.
+4. Works in light and dark mode, and on both native and web where relevant.
+5. No hand-edited native directories; dependencies added via `expo install`.
