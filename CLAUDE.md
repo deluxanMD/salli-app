@@ -12,7 +12,8 @@ Enabled experiments (`app.json`): `typedRoutes`, `reactCompiler`.
 
 ```bash
 npx expo start          # dev server
-npx expo lint           # lint
+npx expo lint           # lint (includes Prettier)
+npm run format          # format with Prettier
 npx tsc --noEmit        # typecheck
 npx expo-doctor         # diagnose dependency/config issues
 npx expo install <pkg>  # add dependencies (never npm/yarn add)
@@ -23,23 +24,41 @@ The project uses npm (`package-lock.json`), so use `npx`, not `bunx`. Run lint a
 
 ## Structure
 
+Follow the modern Expo Router layout: a `src/` directory, with routes separated from everything else.
+
 ```
-src/app/         Expo Router routes only (_layout.tsx, index.tsx, explore.tsx)
-src/components/  Shared UI components (platform variants: *.web.tsx)
-src/components/ui/
-src/hooks/       Custom hooks (use-theme, use-color-scheme[.web])
-src/constants/   theme.ts (Colors, Fonts, spacing)
-assets/          Images and icons
+src/
+  app/            Routes only (_layout.tsx, index.tsx, explore.tsx; (groups), [dynamic])
+  components/     Shared UI components (ui/ for primitives)
+  features/       Feature modules (components, hooks, api, types) once the app grows
+  hooks/          Shared custom hooks
+  constants/      theme.ts and other constants
+  utils/          Pure helper functions
+  services/       API clients and external integrations
+  types/          Shared TypeScript types
+assets/           Images, fonts, icons
 ```
 
 - Every file in `src/app/` is a route. Keep components, hooks, and utils out of it.
-- Use the `@/` path alias for `src/` imports (e.g. `@/hooks/use-theme`), not deep relative paths.
+- Add new top-level folders under `src/` only when needed; co-locate code used by a single feature in `src/features/<feature>/`.
+
+## Naming & imports
+
+- **Files and folders:** kebab-case (`themed-text.tsx`, `use-theme.ts`). Route files follow Expo Router syntax (`[id].tsx`, `(tabs)/`, `_layout.tsx`).
+- **Platform variants:** `.web.tsx`, `.ios.tsx`, `.android.tsx` suffixes instead of scattered `Platform.OS` checks.
+- **Identifiers:** PascalCase components and types, camelCase variables and functions, `use` prefix for hooks, UPPER_SNAKE_CASE for true constants.
+- **Exports:** named exports for components, hooks, and utils; default exports only where Expo Router requires them (route files).
+- **Imports:** use the `@/` alias for anything under `src/` (never deep `../../` paths); use `import type` for type-only imports. Order: React/React Native, third-party packages, `@/` alias imports, relative imports, styles. VS Code organizes imports on save.
+
+## Lint & formatting
+
+- ESLint (`eslint-config-expo`) and Prettier are configured: `eslint.config.js`, `.prettierrc`, `.prettierignore`. Prettier runs through ESLint, so `npx expo lint` reports formatting problems.
+- Style: single quotes, semicolons, trailing commas, 100-character lines, 2-space indent.
+- Before finishing any change run `npm run format`, `npx expo lint` and `npx tsc --noEmit`. Don't disable lint rules without a comment explaining why.
 
 ## Conventions
 
-- **Naming:** kebab-case file names (`themed-text.tsx`); PascalCase components; camelCase hooks prefixed with `use`.
-- **Platform code:** use `.web.tsx` / `.web.ts` (or `.ios` / `.android`) suffixes for platform-specific files rather than scattering `Platform.OS` checks.
-- **Theming:** read colors via `useTheme()` and `Colors` in `src/constants/theme.ts`; support light and dark mode everywhere. Prefer `ThemedText` / `ThemedView`. Don't hard-code colors in components.
+- **Theming:** read colors via `useTheme()` and `Colors` in `src/constants/theme.ts`; support light and dark mode. Prefer `ThemedText` / `ThemedView`. Don't hard-code colors in components.
 - **TypeScript:** strict mode; avoid `any`. Use typed routes (`Link`, `router`) from `expo-router`.
 - **React Compiler is on:** don't add manual `useMemo` / `useCallback` / `React.memo` unless there's a measured reason.
 - **Navigation:** Expo Router only. Import `Link`, `router`, `useLocalSearchParams` from `expo-router`.
@@ -64,6 +83,6 @@ Expo changes between SDK releases — don't rely on memory. Check the `expo` maj
 ## Definition of done
 
 1. `npx tsc --noEmit` passes.
-2. `npx expo lint` passes.
+2. `npx expo lint` passes and `npm run format:check` is clean.
 3. Works in light and dark mode, and on both native and web where relevant.
 4. No hand-edited native directories; dependencies added via `expo install`.
