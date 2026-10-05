@@ -65,6 +65,10 @@ assets/           Images, fonts, icons
 - **Performance:** use `FlatList`/`FlashList` for long lists, `expo-image` for images, Reanimated for animation (keep work on the UI thread).
 - **Layout:** respect safe areas (`react-native-safe-area-context`) and test on small screens.
 
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on pull requests and pushes to `main`: lint, Prettier check, typecheck, `expo-doctor`, and a web export build. All must pass before merging. Run the same checks locally before pushing.
+
 ## Dependencies
 
 - Add packages with `npx expo install <pkg>` so SDK-compatible versions are chosen.
